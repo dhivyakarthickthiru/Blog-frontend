@@ -8,6 +8,7 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import CreatePost from "./pages/CreatePost";
 import Profile from "./pages/Profile";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 /*
 Router configuration
@@ -31,17 +32,35 @@ const router = createBrowserRouter([
 
   {
     path: "/dashboard",
-    element: <Dashboard />,
+    element: (
+      <ProtectedRoute>
+
+        <Dashboard />
+
+      </ProtectedRoute>
+    ),
   },
 
   {
     path: "/create-post",
-    element: <CreatePost />,
+    element: (
+      <ProtectedRoute>
+    <CreatePost />
+    </ProtectedRoute>
+  ),
   },
 
   {
     path: "/profile",
-    element: <Profile />,
+    element: (
+      <ProtectedRoute>
+    <Profile />
+    </ProtectedRoute>
+
+
+
+
+  ),
   },
 ]);
 
