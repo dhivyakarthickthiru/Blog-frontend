@@ -1,44 +1,87 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
+import CategoryMenu from "./CategoryMenu";
 
 const Navbar = () => {
 
+  const navigate = useNavigate();
+
+  const token =
+    localStorage.getItem("token");
+
   const handleLogout = () => {
 
-    // token remove
     localStorage.removeItem("token");
 
-    // redirect to login
-    window.location.href = "/login";
+    navigate("/login");
+
   };
 
   return (
+
     <div className="bg-blue-600 text-white p-4 flex justify-between">
 
       <h1 className="font-bold">
         Blog App
       </h1>
 
-      <div className="flex gap-4">
+      <div className="flex gap-4 items-center">
 
-        <Link to="/dashboard">
-          Dashboard
+        <Link to="/">
+          Home
         </Link>
 
-        <Link to="/create-post">
-          Create Post
-        </Link>
+        {/* CATEGORY DROPDOWN */}
 
-        <button
-          onClick={handleLogout}
-          className="bg-red-500 px-3 py-1 rounded"
-        >
-          Logout
-        </button>
+        <div className="relative group">
+
+          <button>
+            Categories ▼
+          </button>
+
+          <div className="absolute hidden group-hover:block bg-white text-black mt-2 rounded shadow z-50">
+
+            <CategoryMenu />
+
+          </div>
+
+        </div>
+
+        {token ? (
+
+          <>
+            <Link to="/dashboard">
+              Dashboard
+            </Link>
+
+            <Link to="/create-post">
+              Create Post
+            </Link>
+
+            <button onClick={handleLogout}>
+              Logout
+            </button>
+          </>
+
+        ) : (
+
+          <>
+            <Link to="/login">
+              Login
+            </Link>
+
+            <Link to="/register">
+              Register
+            </Link>
+          </>
+
+        )}
 
       </div>
 
     </div>
+
   );
+
 };
 
 export default Navbar;

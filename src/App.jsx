@@ -2,6 +2,7 @@ import React from "react";
 
 import {createBrowserRouter,RouterProvider} from "react-router";
 
+
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -9,6 +10,8 @@ import Dashboard from "./pages/Dashboard";
 import CreatePost from "./pages/CreatePost";
 import Profile from "./pages/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
+import SinglePost from "./pages/SinglePost";
+
 
 /*
 Router configuration
@@ -19,6 +22,11 @@ const router = createBrowserRouter([
     path: "/",
     element: <Home />,
   },
+
+  {
+  path: "/post/:id",
+  element: <SinglePost />
+},
 
   {
     path: "/login",

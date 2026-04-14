@@ -1,7 +1,17 @@
+import { useNavigate } from "react-router";
+
 const PostCard = ({ post }) => {
 
+  const navigate = useNavigate();
+
   return (
-    <div className="border p-4 rounded shadow">
+
+    <div
+      onClick={() =>
+        navigate(`/post/${post._id}`)
+      }
+      className="border p-4 rounded shadow cursor-pointer hover:shadow-lg transition"
+    >
 
       {/* IMAGE */}
 
@@ -42,6 +52,7 @@ const PostCard = ({ post }) => {
       </div>
 
     </div>
+
   );
 
 };

@@ -1,97 +1,122 @@
 import { useEffect, useState } from "react";
 import API from "../services/api";
 
-import PostCard from "../components/PostCard";
+import Layout from "../components/Layout";
 import HeroSection from "../components/HeroSection";
 import SidebarPosts from "../components/SidebarPosts";
+import PostCard from "../components/PostCard";
 
 const Home = () => {
 
+  // POSTS STATE
+
   const [posts, setPosts] =
     useState([]);
+
+  // CATEGORY STATE
+
+  const [selectedCategory,
+    setSelectedCategory] =
+    useState("");
+
+  // FETCH POSTS
 
   useEffect(() => {
 
     const fetchPosts =
       async () => {
 
-      try {
+        try {
 
-        const res =
-          await API.get(
-            "/posts"
+          let url =
+            "/posts";
+
+          // If category selected
+
+          if (selectedCategory) {
+
+            url =
+              `/posts?category=${selectedCategory}`;
+
+          }
+
+          const res =
+            await API.get(url);
+
+          setPosts(
+            res.data
           );
 
-        setPosts(
-          res.data
-        );
+        } catch (error) {
 
-      } catch (error) {
+          console.log(error);
 
-        console.log(error);
+        }
 
-      }
-
-    };
+      };
 
     fetchPosts();
 
-  }, []);
+  }, [selectedCategory]);
 
-  // Latest post for hero
-
-  const heroPost =
-    posts[0];
+  // UI
 
   return (
-    <div className="p-6">
 
-      {/* HERO + SIDEBAR */}
+    <Layout>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+      <div className="grid md:grid-cols-3 gap-6">
+
+        {/* LEFT SIDE */}
 
         <div className="md:col-span-2">
 
-          <HeroSection
-            post={heroPost}
-          />
+          {/* HERO */}
+
+          <HeroSection posts={posts} />
+
+
+          {/* TITLE */}
+
+          <h2 className="text-xl font-bold mt-6 mb-4">
+
+            Latest Posts
+
+          </h2>
+
+          {/* POSTS */}
+
+          <div className="grid md:grid-cols-2 gap-4">
+
+            {posts.length === 0 ? (
+
+              <p>No posts found</p>
+
+            ) : (
+
+              posts.map((post) => (
+
+                <PostCard
+                  key={post._id}
+                  post={post}
+                />
+
+              ))
+
+            )}
+
+          </div>
 
         </div>
 
-        <div>
+        {/* RIGHT SIDEBAR */}
 
-          <SidebarPosts
-            posts={posts}
-          />
-
-        </div>
+        <SidebarPosts posts={posts} />
 
       </div>
 
-      {/* POSTS GRID */}
+    </Layout>
 
-      <h1 className="text-2xl font-bold mb-4">
-        Latest Posts
-      </h1>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-
-        {
-          posts.map(
-            (post) => (
-
-              <PostCard
-                key={post._id}
-                post={post}
-              />
-
-            )
-          )
-        }
-
-      </div>
-
-    </div>
   );
 
 };
