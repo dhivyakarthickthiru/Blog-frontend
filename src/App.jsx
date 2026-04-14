@@ -11,6 +11,10 @@ import CreatePost from "./pages/CreatePost";
 import Profile from "./pages/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
 import SinglePost from "./pages/SinglePost";
+import ManageCategories
+  from "./pages/ManageCategories";
+ import MyPosts from "./pages/MyPosts";
+import EditPost from "./pages/EditPost"; 
 
 
 /*
@@ -57,6 +61,21 @@ const router = createBrowserRouter([
     </ProtectedRoute>
   ),
   },
+
+  {
+  path: "/my-posts",
+  element: <MyPosts />
+},
+{
+  path: "/edit-post/:id",
+  element: <EditPost />
+},
+
+  {
+  path: "/manage-categories",
+  element:
+    <ManageCategories />
+},
 
   {
     path: "/profile",

@@ -70,8 +70,8 @@ const CreatePost = () => {
 
   // Submit post
 
- const handleSubmit =
-  async (e) => {
+    const handleSubmit =
+  async (e, status) => {
 
   e.preventDefault();
 
@@ -84,10 +84,6 @@ const CreatePost = () => {
 
     const content =
       editor.getHTML();
-
-    // =========================
-    // CREATE FORM DATA
-    // =========================
 
     const formData =
       new FormData();
@@ -107,7 +103,12 @@ const CreatePost = () => {
       category
     );
 
-    // image add here
+    // NEW
+
+    formData.append(
+      "status",
+      status
+    );
 
     if (image) {
 
@@ -118,10 +119,6 @@ const CreatePost = () => {
 
     }
 
-    // =========================
-    // API CALL
-    // =========================
-
     await API.post(
       "/posts",
       formData,
@@ -129,23 +126,20 @@ const CreatePost = () => {
         headers: {
           Authorization:
             `Bearer ${token}`
-         
         }
       }
     );
 
     alert(
-      "Post created successfully"
+      status === "draft"
+        ? "Draft saved successfully"
+        : "Post published successfully"
     );
 
-    // =========================
-    // CLEAR FORM
-    // =========================
+    // CLEAR
 
     setTitle("");
-
     setCategory("");
-
     setImage(null);
 
     editor.commands.setContent(
@@ -246,12 +240,39 @@ const CreatePost = () => {
 
         {/* Submit Button */}
 
-        <button
-          type="submit"
-          className="bg-blue-600 text-white px-4 py-2 rounded"
-        >
-          Publish Post
-        </button>
+        <div className="flex gap-3">
+
+  {/* SAVE DRAFT */}
+
+  <button
+    type="button"
+    onClick={(e) =>
+      handleSubmit(
+        e,
+        "draft"
+      )
+    }
+    className="bg-gray-500 text-white px-4 py-2 rounded"
+  >
+    Save Draft
+  </button>
+
+  {/* PUBLISH */}
+
+  <button
+    type="button"
+    onClick={(e) =>
+      handleSubmit(
+        e,
+        "published"
+      )
+    }
+    className="bg-blue-600 text-white px-4 py-2 rounded"
+  >
+    Publish Post
+  </button>
+
+</div>
 
       </form>
 

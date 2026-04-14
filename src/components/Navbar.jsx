@@ -57,6 +57,16 @@ const Navbar = () => {
               Create Post
             </Link>
 
+             <Link to="/my-posts">
+    My Posts
+  </Link>
+
+             {/* NEW */}
+
+  <Link to="/manage-categories">
+    Manage Categories
+  </Link>
+
             <button onClick={handleLogout}>
               Logout
             </button>
