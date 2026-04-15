@@ -67,6 +67,10 @@ const Navbar = () => {
     Manage Categories
   </Link>
 
+  <Link to="/manage-tags">
+  Manage Tags
+</Link>
+
             <button onClick={handleLogout}>
               Logout
             </button>

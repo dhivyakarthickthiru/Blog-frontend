@@ -15,6 +15,10 @@ import ManageCategories
   from "./pages/ManageCategories";
  import MyPosts from "./pages/MyPosts";
 import EditPost from "./pages/EditPost"; 
+import ManageTags
+  from "./pages/ManageTags";
+import PostAnalytics from "./pages/PostAnalytics";  
+import MyBookmarks from "./pages/MyBookmarks";
 
 
 /*
@@ -30,6 +34,16 @@ const router = createBrowserRouter([
   {
   path: "/post/:id",
   element: <SinglePost />
+},
+
+{
+  path: "/post/:id/analytics",
+  element: <PostAnalytics />
+},
+
+{
+  path: "/my-bookmarks",
+  element: <MyBookmarks />
 },
 
   {
@@ -75,6 +89,12 @@ const router = createBrowserRouter([
   path: "/manage-categories",
   element:
     <ManageCategories />
+},
+
+
+{
+  path: "/manage-tags",
+  element: <ManageTags />
 },
 
   {

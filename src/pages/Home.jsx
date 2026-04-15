@@ -5,6 +5,7 @@ import Layout from "../components/Layout";
 import HeroSection from "../components/HeroSection";
 import SidebarPosts from "../components/SidebarPosts";
 import PostCard from "../components/PostCard";
+import MostViewedPosts from "../components/MostViewedPosts";
 
 const Home = () => {
 
@@ -103,16 +104,24 @@ const Home = () => {
 
               ))
 
+              
+
             )}
 
           </div>
 
+         
+
         </div>
+        <div>
 
         {/* RIGHT SIDEBAR */}
 
         <SidebarPosts posts={posts} />
 
+
+         <MostViewedPosts />
+        </div>
       </div>
 
     </Layout>
