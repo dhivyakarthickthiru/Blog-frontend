@@ -20,6 +20,8 @@ import ManageTags
 import PostAnalytics from "./pages/PostAnalytics";  
 import MyBookmarks from "./pages/MyBookmarks";
 
+import AuthorPage from "./pages/AuthorPage";
+
 
 /*
 Router configuration
@@ -103,12 +105,13 @@ const router = createBrowserRouter([
       <ProtectedRoute>
     <Profile />
     </ProtectedRoute>
+),
+},
 
-
-
-
-  ),
-  },
+{
+  path: "/authors/:id",
+  element: <AuthorPage />
+}
 ]);
 
 function App() {

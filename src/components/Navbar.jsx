@@ -1,12 +1,46 @@
 import { Link, useNavigate } from "react-router";
+import { useEffect, useState } from "react";
 import CategoryMenu from "./CategoryMenu";
+import API from "../services/api";
 
 const Navbar = () => {
 
   const navigate = useNavigate();
 
-  const token =
-    localStorage.getItem("token");
+  // FIRST declare token
+
+  const token = localStorage.getItem("token");
+
+  const [user, setUser] = useState({});
+
+  // THEN useEffect
+
+  useEffect(() => {
+
+    const fetchProfile = async () => {
+
+      try {
+
+        const res = await API.get(
+            "/auth/profile"
+        );
+        console.log("PROFILE DATA:", res.data);
+
+        setUser(res.data);
+
+      } catch (error) {
+
+        console.log(error);
+
+      }
+
+    };
+
+    if (token) {
+      fetchProfile();
+    }
+
+  }, [token]);
 
   const handleLogout = () => {
 
@@ -17,18 +51,31 @@ const Navbar = () => {
   };
 
   return (
-
-    <div className="bg-blue-600 text-white p-4 flex justify-between">
-
+       <div className="fixed top-0 left-0 w-full bg-blue-600 text-white p-4 flex justify-between z-50">
       <h1 className="font-bold">
         Blog App
       </h1>
 
+
+      
+
+
       <div className="flex gap-4 items-center">
+
+
+        
+          {user.profilePicture && (
+    <img
+      src={`http://localhost:3001${user.profilePicture}`}
+      alt="profile"
+      className="w-10 h-10 rounded-full border"
+    />
+  )}
 
         <Link to="/">
           Home
         </Link>
+
 
         {/* CATEGORY DROPDOWN */}
 
@@ -60,6 +107,10 @@ const Navbar = () => {
              <Link to="/my-posts">
     My Posts
   </Link>
+         <Link to="/profile">
+  Profile
+</Link>
+
 
              {/* NEW */}
 
@@ -94,6 +145,7 @@ const Navbar = () => {
 
     </div>
 
+    
   );
 
 };

@@ -1,8 +1,11 @@
-
-import { useState } from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router";
 import API from "../services/api";
 
 const Register = () => {
+
+  const navigate = useNavigate();
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -11,6 +14,7 @@ const Register = () => {
     e.preventDefault();
 
     try {
+
       const res = await API.post("/auth/register", {
         name,
         email,
@@ -21,9 +25,16 @@ const Register = () => {
 
       console.log(res.data);
 
+      // Go to Home page
+
+      navigate("/");
+
     } catch (error) {
+
       console.log(error);
+
       alert("Registration failed");
+
     }
   };
 

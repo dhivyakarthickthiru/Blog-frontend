@@ -1,7 +1,11 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router";
 import API from "../services/api";
 
 const Login = () => {
+
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -9,24 +13,28 @@ const Login = () => {
     e.preventDefault();
 
     try {
+
       const res = await API.post("/auth/login", {
         email,
         password,
       });
 
-      alert("Login successful");
+      // Save token
 
-      console.log(res.data);
-
-      // Token store (localStorage)
       localStorage.setItem("token", res.data.token);
 
-      // Redirect to dashboard
-      window.location.href = "/dashboard";
+      alert("Login successful");
+
+      // Go to Home page
+
+      navigate("/");
 
     } catch (error) {
+
       console.log(error);
+
       alert("Login failed");
+
     }
   };
 
@@ -59,7 +67,7 @@ const Login = () => {
 
           <button
             type="submit"
-            className="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600"
+            className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
           >
             Login
           </button>

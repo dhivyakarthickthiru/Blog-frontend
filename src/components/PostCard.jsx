@@ -1,11 +1,12 @@
 import {
-  useNavigate
+  useNavigate,Link
 } from "react-router";
 
 import {
   useState,
   useEffect
 } from "react";
+
 
 import API from "../services/api";
 
@@ -37,6 +38,19 @@ const PostCard = ({ post }) => {
   const [bookmarked,
   setBookmarked] =
   useState(false);
+
+  
+  useEffect(() => {
+
+  console.log("BOOKMARK STATUS:", post.bookmarked);
+
+  if (post.bookmarked) {
+    setBookmarked(true);
+  } else {
+    setBookmarked(false);
+  }
+
+}, [post.bookmarked]);
 
   // ======================
   // FETCH LIKES COUNT
@@ -316,8 +330,19 @@ const handleBookmark =
 
       <div className="mt-2 text-sm text-gray-500">
 
-        By {post.author?.name}
+        By 
+        <Link
+  to={`/authors/${post.author?._id}`}
+  className="text-blue-600 hover:underline ml-1"
+  onClick={(e) => e.stopPropagation()} 
 
+
+>
+ {post.author?.name}
+
+
+</Link>
+        
       </div>
 
       {/* ICON SECTION */}
@@ -357,15 +382,13 @@ const handleBookmark =
         
         <span
   onClick={handleBookmark}
-  className={
+  className={`cursor-pointer ${
     bookmarked
-      ? "text-blue-600 cursor-pointer"
-      : "cursor-pointer"
-  }
+      ? "text-blue-600"
+      : "text-gray-500"
+  }`}
 >
-
   🔖
-
 </span>
 
         {/* SHARE */}
