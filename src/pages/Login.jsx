@@ -98,6 +98,28 @@ const Login = () => {
 
         </div>
 
+        <div className="mt-4 text-center">
+
+  <span className="text-sm">
+
+    New user?
+
+  </span>
+
+  <Link
+    to="/register"
+    className="
+      text-blue-600
+      text-sm
+      hover:underline
+      ml-1
+    "
+  >
+    Register here
+  </Link>
+
+</div>
+
       </div>
 
     </div>

@@ -27,6 +27,9 @@ import MyBookmarks from "./pages/MyBookmarks";
 
 import AuthorPage from "./pages/AuthorPage";
 
+import AdminDashboard
+  from "./pages/AdminDashboard";
+
 
 /*
 Router configuration
@@ -34,10 +37,13 @@ Router configuration
 
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <Home />,
-  },
-
+  path: "/",
+  element: (
+    <ProtectedRoute>
+      <Home />
+    </ProtectedRoute>
+  )
+},
   {
   path: "/post/:id",
   element: <SinglePost />
@@ -56,6 +62,11 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <Login />,
+  },
+
+  {
+     path:"/register",
+     element:<Register />
   },
   {
 
@@ -77,11 +88,7 @@ const router = createBrowserRouter([
 },
   
 
-  {
-    path: "/register",
-    element: <Register />,
-  },
-
+  
   {
     path: "/dashboard",
     element: (
@@ -92,6 +99,15 @@ const router = createBrowserRouter([
       </ProtectedRoute>
     ),
   },
+
+  {
+  path: "/admin",
+  element: (
+    <ProtectedRoute>
+      <AdminDashboard />
+    </ProtectedRoute>
+  )
+},
 
   {
     path: "/create-post",

@@ -192,6 +192,8 @@ const [unreadCount,
               Dashboard
             </Link>
 
+
+
             <Link to="/create-post">
               Create Post
             </Link>
@@ -206,6 +208,19 @@ const [unreadCount,
          <Link to="/profile">
   Profile
 </Link>
+
+{
+  user.role === "admin" && (
+
+    <Link to="/admin">
+
+      Admin
+
+    </Link>
+
+  )
+}
+
 
 
 
