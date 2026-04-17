@@ -1,59 +1,61 @@
-import {
-  useNavigate,Link
-} from "react-router";
+import { useNavigate, Link } from "react-router";
+import { useState, useEffect } from "react";
 
-import {
-  useState,
-  useEffect
-} from "react";
-
+import AuthorSubscribeButton
+  from "./AuthorSubscribeButton";
 
 import API from "../services/api";
 
+import {
+  FaWhatsapp,
+  FaFacebook,
+  FaLinkedin,
+  FaLink
+} from "react-icons/fa";
+
 const PostCard = ({ post }) => {
 
-  const navigate =
-    useNavigate();
+  const navigate = useNavigate();
 
   // ======================
   // STATE
   // ======================
 
-  const [likes,
-    setLikes] =
-    useState(
-      post.likes?.length || 0
-    );
+  const [likes, setLikes] =
+    useState(post.likes?.length || 0);
 
-  const [liked,
-    setLiked] =
+  const [liked, setLiked] =
     useState(false);
 
-  const [shares,
-  setShares] =
-  useState(
-    post.shares || 0
-  );  
-
   const [bookmarked,
-  setBookmarked] =
-  useState(false);
+    setBookmarked] =
+    useState(false);
 
-  
-  useEffect(() => {
+  const [showShare,
+    setShowShare] =
+    useState(false);
 
-  console.log("BOOKMARK STATUS:", post.bookmarked);
+  const [shareCount,
+    setShareCount] =
+    useState(post.shares || 0);
 
-  if (post.bookmarked) {
-    setBookmarked(true);
-  } else {
-    setBookmarked(false);
-  }
-
-}, [post.bookmarked]);
+  const postUrl =
+    `${window.location.origin}/post/${post._id}`;
 
   // ======================
-  // FETCH LIKES COUNT
+  // BOOKMARK STATUS
+  // ======================
+
+  useEffect(() => {
+
+    setBookmarked(
+      post.bookmarked || false
+    );
+
+  }, [post.bookmarked]);
+
+  // ======================
+  // FETCH LIKES
   // ======================
 
   useEffect(() => {
@@ -61,226 +63,206 @@ const PostCard = ({ post }) => {
     const fetchLikes =
       async () => {
 
-      try {
+        try {
 
-        const res =
-          await API.get(
-            `/posts/${post._id}/likes`
+          const res =
+            await API.get(
+              `/posts/${post._id}/likes`
+            );
+
+          setLikes(
+            res.data.totalLikes
           );
 
-        setLikes(
-          res.data.totalLikes
-        );
+        } catch (error) {
 
-      } catch (error) {
+          console.log(error);
 
-        console.log(
-          "Fetch likes error:",
-          error
-        );
+        }
 
-      }
-
-    };
+      };
 
     fetchLikes();
 
   }, [post._id]);
 
   // ======================
-  // NAVIGATE TO SINGLE POST
+  // NAVIGATE
   // ======================
 
-  const handleNavigate =
-    () => {
+  const handleNavigate = () => {
 
-      console.log(
-        "Navigating to:",
-        post._id
-      );
+    navigate(
+      `/post/${post._id}`
+    );
 
-      navigate(
-        `/post/${post._id}`
-      );
+  };
+
+  // ======================
+  // LIKE
+  // ======================
+
+  const handleLike =
+    async (e) => {
+
+      e.stopPropagation();
+
+      try {
+
+        const token =
+          localStorage.getItem(
+            "token"
+          );
+
+        if (!token) {
+
+          alert(
+            "Please login first"
+          );
+
+          return;
+
+        }
+
+        if (liked) {
+
+          await API.delete(
+            `/posts/${post._id}/unlike`
+          );
+
+          setLiked(false);
+
+          setLikes(
+            (prev) =>
+              prev - 1
+          );
+
+        } else {
+
+          const res =
+            await API.post(
+              `/posts/${post._id}/like`
+            );
+
+          setLiked(true);
+
+          setLikes(
+            res.data.totalLikes
+          );
+
+        }
+
+      } catch (error) {
+
+        console.log(error);
+
+      }
 
     };
 
   // ======================
-  // LIKE / UNLIKE
+  // SHARE
   // ======================
 
-  const handleLike = async (e) => {
+  const handleShare =
+    async (platform) => {
 
-  e.stopPropagation();
+      try {
 
-  try {
+        const res =
+          await API.put(
+            `/posts/${post._id}/share`
+          );
 
-    const token =
-      localStorage.getItem(
-        "token"
-      );
-
-    if (!token) {
-
-      alert(
-        "Please login first"
-      );
-
-      return;
-
-    }
-
-    if (liked) {
-
-      await API.delete(
-        `/posts/${post._id}/unlike`,
-        {
-          headers: {
-            Authorization:
-              `Bearer ${token}`
-          }
-        }
-      );
-
-      setLiked(false);
-
-      setLikes(
-        (prev) =>
-          prev - 1
-      );
-
-    } else {
-
-      const res =
-        await API.post(
-          `/posts/${post._id}/like`,
-          {},
-          {
-            headers: {
-              Authorization:
-                `Bearer ${token}`
-            }
-          }
+        setShareCount(
+          res.data.totalShares
         );
 
-      setLiked(true);
+        let shareLink = "";
 
-      setLikes(
-        res.data.totalLikes
-      );
+        if (platform === "whatsapp") {
 
-    }
+          shareLink =
+            `https://wa.me/?text=${postUrl}`;
 
-  } catch (error) {
-
-    console.log(
-      "Like error:",
-      error.response?.data
-    );
-
-  }
-
-};
-
-
-
-const handleShare =
-  async (e) => {
-
-  e.stopPropagation();
-
-  try {
-
-    // Copy link
-
-    const link =
-      `${window.location.origin}/post/${post._id}`;
-
-    await navigator.clipboard.writeText(
-      link
-    );
-
-    alert(
-      "Link copied!"
-    );
-
-    // Update share count
-
-    const res =
-      await API.put(
-        `/posts/${post._id}/share`
-      );
-
-    setShares(
-      res.data.totalShares
-    );
-
-  } catch (error) {
-
-    console.log(error);
-
-  }
-
-};
-
-
-const handleBookmark =
-  async (e) => {
-
-  e.stopPropagation();
-
-  try {
-
-    const token =
-      localStorage.getItem(
-        "token"
-      );
-
-    if (bookmarked) {
-
-      await API.delete(
-
-        `/posts/${post._id}/bookmark`,
-
-        {
-          headers: {
-            Authorization:
-              `Bearer ${token}`
-          }
         }
 
-      );
+        if (platform === "facebook") {
 
-      setBookmarked(false);
+          shareLink =
+            `https://www.facebook.com/sharer/sharer.php?u=${postUrl}`;
 
-    } else {
-
-      await API.post(
-
-        `/posts/${post._id}/bookmark`,
-
-        {},
-
-        {
-          headers: {
-            Authorization:
-              `Bearer ${token}`
-          }
         }
 
-      );
+        if (platform === "linkedin") {
 
-      setBookmarked(true);
+          shareLink =
+            `https://www.linkedin.com/sharing/share-offsite/?url=${postUrl}`;
 
-    }
+        }
 
-  } catch (error) {
+        if (platform === "copy") {
 
-    console.log(error);
+          navigator.clipboard.writeText(
+            postUrl
+          );
 
-  }
+          alert("Link copied");
 
-};
+          return;
+
+        }
+
+        window.open(
+          shareLink,
+          "_blank"
+        );
+
+      } catch (error) {
+
+        console.log(error);
+
+      }
+
+    };
+
+  // ======================
+  // BOOKMARK
+  // ======================
+
+  const handleBookmark =
+    async (e) => {
+
+      e.stopPropagation();
+
+      try {
+
+        if (bookmarked) {
+
+          await API.delete(
+            `/posts/${post._id}/bookmark`
+          );
+
+          setBookmarked(false);
+
+        } else {
+
+          await API.post(
+            `/posts/${post._id}/bookmark`
+          );
+
+          setBookmarked(true);
+
+        }
+
+      } catch (error) {
+
+        console.log(error);
+
+      }
+
+    };
+
   // ======================
   // UI
   // ======================
@@ -288,10 +270,18 @@ const handleBookmark =
   return (
 
     <div
-      className="border p-4 rounded shadow bg-white cursor-pointer hover:shadow-lg transition"
-      onClick={
-        handleNavigate
-      }
+      className="
+        relative
+        border
+        p-4
+        rounded
+        shadow
+        bg-white
+        cursor-pointer
+        hover:shadow-lg
+        transition
+      "
+      onClick={handleNavigate}
     >
 
       {/* IMAGE */}
@@ -330,25 +320,50 @@ const handleBookmark =
 
       <div className="mt-2 text-sm text-gray-500">
 
-        By 
+        By
+
         <Link
-  to={`/authors/${post.author?._id}`}
-  className="text-blue-600 hover:underline ml-1"
-  onClick={(e) => e.stopPropagation()} 
+          to={`/authors/${post.author?._id}`}
+          className="text-blue-600 hover:underline ml-1"
+          onClick={(e) =>
+            e.stopPropagation()
+          }
+        >
 
+          {post.author?.name}
 
->
- {post.author?.name}
+        </Link>
 
-
-</Link>
-        
       </div>
 
-      {/* ICON SECTION */}
+      {/* AUTHOR SUBSCRIBE */}
+
+      <div className="flex justify-between items-center mt-2">
+
+        <span>
+
+          By {post.author?.name}
+
+        </span>
+
+        <AuthorSubscribeButton
+          authorId={
+            post.author?._id
+          }
+        />
+
+      </div>
+
+      {/* ICONS */}
 
       <div
-        className="flex justify-between items-center mt-4 text-gray-600"
+        className="
+          flex
+          justify-between
+          items-center
+          mt-4
+          text-gray-600
+        "
         onClick={(e) =>
           e.stopPropagation()
         }
@@ -379,26 +394,135 @@ const handleBookmark =
 
         {/* BOOKMARK */}
 
-        
         <span
-  onClick={handleBookmark}
-  className={`cursor-pointer ${
-    bookmarked
-      ? "text-blue-600"
-      : "text-gray-500"
-  }`}
->
-  🔖
-</span>
+          onClick={handleBookmark}
+          className={`cursor-pointer ${
+            bookmarked
+              ? "text-blue-600"
+              : "text-gray-500"
+          }`}
+        >
+
+          🔖
+
+        </span>
 
         {/* SHARE */}
 
-        <span   onClick={handleShare}
-        className="cursor-pointer  hover:text-blue-600">
+        <div className="relative">
 
-          ↗ Share    ({shares})
+          <span
+            onClick={(e) => {
 
-        </span>
+              e.stopPropagation();
+
+              setShowShare(
+                !showShare
+              );
+
+            }}
+            className="
+              cursor-pointer
+              hover:text-blue-600
+            "
+          >
+
+            ↗ Share ({shareCount})
+
+          </span>
+
+          {showShare && (
+
+            <div
+              className="
+                absolute
+                right-0
+                bg-white
+                border
+                p-2
+                rounded
+                shadow
+                mt-2
+                flex
+                gap-4
+                text-2xl
+                z-50
+              "
+            >
+
+              <button
+                onClick={() =>
+                  handleShare(
+                    "whatsapp"
+                  )
+                }
+                className="
+                  text-green-500
+                  hover:scale-110
+                  transition
+                "
+              >
+
+                <FaWhatsapp />
+
+              </button>
+
+              <button
+                onClick={() =>
+                  handleShare(
+                    "facebook"
+                  )
+                }
+                className="
+                  text-blue-600
+                  hover:scale-110
+                  transition
+                "
+              >
+
+                <FaFacebook />
+
+              </button>
+
+              <button
+                onClick={() =>
+                  handleShare(
+                    "linkedin"
+                  )
+                }
+                className="
+                  text-blue-800
+                  hover:scale-110
+                  transition
+                "
+              >
+
+                <FaLinkedin />
+
+              </button>
+
+              <button
+                onClick={() =>
+                  handleShare(
+                    "copy"
+                  )
+                }
+                className="
+                  text-gray-600
+                  hover:scale-110
+                  transition
+                "
+              >
+
+                <FaLink />
+
+              </button>
+
+            </div>
+
+          )}
+
+        </div>
 
       </div>
 
@@ -409,3 +533,13 @@ const handleBookmark =
 };
 
 export default PostCard;
+
+
+
+
+
+
+
+
+
+

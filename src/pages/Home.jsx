@@ -11,7 +11,10 @@ const Home = () => {
 
   // POSTS STATE
 
-  const [posts, setPosts] =
+  const [posts, setPosts] = useState([]);
+
+  const [filteredPosts,
+    setFilteredPosts] =
     useState([]);
 
   // CATEGORY STATE
@@ -22,39 +25,37 @@ const Home = () => {
 
   // FETCH POSTS
 
+  const fetchPosts = async () => {
+
+    try {
+
+      let url = "/posts";
+
+      if (selectedCategory) {
+
+        url =
+          `/posts?category=${selectedCategory}`;
+
+      }
+
+      const res =
+        await API.get(url);
+
+      setPosts(res.data);
+
+      setFilteredPosts(res.data);
+
+    } catch (error) {
+
+      console.log(error);
+
+    }
+
+  };
+
+  // RUN WHEN CATEGORY CHANGES
+
   useEffect(() => {
-
-    const fetchPosts =
-      async () => {
-
-        try {
-
-          let url =
-            "/posts";
-
-          // If category selected
-
-          if (selectedCategory) {
-
-            url =
-              `/posts?category=${selectedCategory}`;
-
-          }
-
-          const res =
-            await API.get(url);
-
-          setPosts(
-            res.data
-          );
-
-        } catch (error) {
-
-          console.log(error);
-
-        }
-
-      };
 
     fetchPosts();
 
@@ -74,8 +75,7 @@ const Home = () => {
 
           {/* HERO */}
 
-          <HeroSection posts={posts} />
-
+          <HeroSection posts={filteredPosts} />
 
           {/* TITLE */}
 
@@ -89,13 +89,13 @@ const Home = () => {
 
           <div className="grid md:grid-cols-2 gap-4">
 
-            {posts.length === 0 ? (
+            {filteredPosts.length === 0 ? (
 
               <p>No posts found</p>
 
             ) : (
 
-              posts.map((post) => (
+              filteredPosts.map((post) => (
 
                 <PostCard
                   key={post._id}
@@ -104,24 +104,34 @@ const Home = () => {
 
               ))
 
-              
-
             )}
 
           </div>
 
-         
-
         </div>
-        <div>
 
         {/* RIGHT SIDEBAR */}
 
-        <SidebarPosts posts={posts} />
+        <div>
 
+          <SidebarPosts
 
-         <MostViewedPosts />
+            posts={posts}
+
+            setFilteredPosts={
+              setFilteredPosts
+            }
+
+            setSelectedCategory={
+              setSelectedCategory
+            }
+
+          />
+
+          <MostViewedPosts />
+
         </div>
+
       </div>
 
     </Layout>

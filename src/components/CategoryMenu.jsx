@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
 import API from "../services/api";
 
-const CategoryMenu = ({ setSelectedCategory }) => {
+import CategorySubscribeButton
+  from "./CategorySubscribeButton";
+
+const CategoryMenu = ({
+  setSelectedCategory
+}) => {
 
   const [categories,
     setCategories] =
@@ -12,29 +17,24 @@ const CategoryMenu = ({ setSelectedCategory }) => {
     const fetchCategories =
       async () => {
 
-        try {
+      try {
 
-          const res =
-            await API.get(
-              "/categories"
-            );
-
-          console.log(
-            "Categories:",
-            res.data
+        const res =
+          await API.get(
+            "/categories"
           );
 
-          setCategories(
-            res.data
-          );
+        setCategories(
+          res.data
+        );
 
-        } catch (error) {
+      } catch (error) {
 
-          console.log(error);
+        console.log(error);
 
-        }
+      }
 
-      };
+    };
 
     fetchCategories();
 
@@ -42,7 +42,7 @@ const CategoryMenu = ({ setSelectedCategory }) => {
 
   return (
 
-    <div className="min-w-[150px]">
+    <div className="min-w-[200px]">
 
       {/* ALL */}
 
@@ -50,28 +50,50 @@ const CategoryMenu = ({ setSelectedCategory }) => {
         onClick={() =>
           setSelectedCategory("")
         }
-        className="block w-full text-left px-4 py-2 hover:bg-gray-200"
+        className="
+          block
+          w-full
+          text-left
+          px-4
+          py-2
+          hover:bg-gray-200
+        "
       >
         All
       </button>
 
       {/* CATEGORY LIST */}
 
-      {categories.map(
-        (cat) => (
+      {categories.map((cat) => (
 
-          <button
-            key={cat._id}
+        <div
+          key={cat._id}
+          className="
+            flex
+            justify-between
+            items-center
+            px-4
+            py-2
+            hover:bg-gray-200
+          "
+        >
+
+          <span
             onClick={() =>
               setSelectedCategory(cat._id)
             }
-            className="block w-full text-left px-4 py-2 hover:bg-gray-200"
+            className="cursor-pointer"
           >
             {cat.name}
-          </button>
+          </span>
 
-        )
-      )}
+          <CategorySubscribeButton
+            categoryId={cat._id}
+          />
+
+        </div>
+
+      ))}
 
     </div>
 

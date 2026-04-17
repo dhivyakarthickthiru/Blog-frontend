@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import API from "../services/api";
 import Layout from "../components/Layout";
+import { useNavigate } from "react-router";
 
 const Profile = () => {
 
@@ -18,6 +19,8 @@ const Profile = () => {
   }, []);
 
   const fetchProfile = async () => {
+
+   
 
     const res = await API.get(
       "/auth/profile"
@@ -44,6 +47,8 @@ const Profile = () => {
 
   };
 
+   const navigate = useNavigate();
+
   const handleSubmit = async (e) => {
 
     e.preventDefault();
@@ -60,6 +65,9 @@ const Profile = () => {
           instagram
         }
       }
+
+      
+
     );
 
     alert("Profile updated");
@@ -141,6 +149,25 @@ const Profile = () => {
         >
           Update Profile
         </button>
+
+<button
+  onClick={() =>
+    navigate("/change-password")
+  }
+  type="button"
+  className="
+    bg-gray-600
+    text-white
+    px-4
+    py-2
+    rounded
+    mt-4
+    ml-2
+  "
+>
+  Change Password
+</button>
+
 
       </form>
 

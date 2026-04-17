@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, Link } from "react-router";
 import API from "../services/api";
 
 const Login = () => {
@@ -14,18 +14,20 @@ const Login = () => {
 
     try {
 
-      const res = await API.post("/auth/login", {
-        email,
-        password,
-      });
+      const res = await API.post(
+        "/auth/login",
+        {
+          email,
+          password,
+        }
+      );
 
-      // Save token
-
-      localStorage.setItem("token", res.data.token);
+      localStorage.setItem(
+        "token",
+        res.data.token
+      );
 
       alert("Login successful");
-
-      // Go to Home page
 
       navigate("/");
 
@@ -39,6 +41,7 @@ const Login = () => {
   };
 
   return (
+
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
 
       <div className="bg-white p-8 rounded-lg shadow-lg w-96">
@@ -54,7 +57,9 @@ const Login = () => {
             placeholder="Email"
             className="w-full p-2 mb-4 border rounded"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) =>
+              setEmail(e.target.value)
+            }
           />
 
           <input
@@ -62,7 +67,9 @@ const Login = () => {
             placeholder="Password"
             className="w-full p-2 mb-4 border rounded"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) =>
+              setPassword(e.target.value)
+            }
           />
 
           <button
@@ -74,10 +81,29 @@ const Login = () => {
 
         </form>
 
+        {/* NEW */}
+
+        <div className="mt-3 text-right">
+
+          <Link
+            to="/forgot-password"
+            className="
+              text-blue-600
+              text-sm
+              hover:underline
+            "
+          >
+            Forgot Password?
+          </Link>
+
+        </div>
+
       </div>
 
     </div>
+
   );
+
 };
 
 export default Login;
