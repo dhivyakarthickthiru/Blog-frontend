@@ -185,43 +185,38 @@ const [unreadCount,
 
         </div>
 
-        {token ? (
+       {token ? (
 
-          <>
-            <Link to="/dashboard">
-              Dashboard
-            </Link>
+  <>
 
+    {/* ROLE BASED DASHBOARD */}
 
+   {user.role === "admin" ? (
 
-            <Link to="/create-post">
-              Create Post
-            </Link>
-
-             <Link to="/my-posts">
-    My Posts
+  <Link to="/admin">
+    Dashboard
   </Link>
 
+) : (
 
-     
-     
-         <Link to="/profile">
-  Profile
-</Link>
+  <Link to="/dashboard">
+    Dashboard
+  </Link>
 
-{
-  user.role === "admin" && (
-
-    <Link to="/admin">
-
-      Admin
-
+)}
+    <Link to="/create-post">
+      Create Post
     </Link>
 
-  )
-}
+    <Link to="/my-posts">
+      My Posts
+    </Link>
 
+    <Link to="/profile">
+      Profile
+    </Link>
 
+    
 
 
 <div className="relative">

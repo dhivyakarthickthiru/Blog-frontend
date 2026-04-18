@@ -12,6 +12,8 @@ const Dashboard = () => {
   const [myPosts, setMyPosts] = useState([]);
   const [totalLikes, setTotalLikes] = useState(0);
 
+  const [loading, setLoading] = useState(true);
+
   // FETCH PROFILE
 
   const fetchProfile = async () => {
@@ -27,7 +29,10 @@ const Dashboard = () => {
 
     } catch (error) {
 
-      console.log(error);
+      console.log(
+        "Profile error:",
+        error
+      );
 
     }
 
@@ -48,13 +53,16 @@ const Dashboard = () => {
 
     } catch (error) {
 
-      console.log(error);
+      console.log(
+        "Posts error:",
+        error
+      );
 
     }
 
   };
 
-  // FETCH MY POSTS + CALCULATE LIKES
+  // FETCH MY POSTS
 
   const fetchMyPosts = async () => {
 
@@ -67,36 +75,62 @@ const Dashboard = () => {
 
       setMyPosts(res.data);
 
-      // Calculate total likes
-
       let likes = 0;
 
-      res.data.forEach((post) => {
+      res.data.forEach(
+        (post) => {
 
-        likes +=
-          post.likes?.length || 0;
+          likes +=
+            post.likes?.length || 0;
 
-      });
+        }
+      );
 
       setTotalLikes(likes);
 
     } catch (error) {
 
-      console.log(error);
+      console.log(
+        "My Posts error:",
+        error
+      );
 
     }
 
   };
 
-  // RUN ON PAGE LOAD
+  // PAGE LOAD
 
   useEffect(() => {
 
-    fetchProfile();
-    fetchPosts();
-    fetchMyPosts();
+    const loadData =
+      async () => {
+
+        setLoading(true);
+
+        await fetchProfile();
+        await fetchPosts();
+        await fetchMyPosts();
+
+        setLoading(false);
+
+      };
+
+    loadData();
 
   }, []);
+
+  // LOADING STATE
+
+  if (loading) {
+
+    return (
+      <p className="p-6">
+        Loading dashboard...
+      </p>
+    );
+
+  }
 
   return (
 
@@ -162,7 +196,7 @@ const Dashboard = () => {
 
       </div>
 
-      {/* QUICK ACTION BUTTONS */}
+      {/* QUICK ACTIONS */}
 
       <div className="flex gap-3 mb-6">
 
@@ -178,7 +212,6 @@ const Dashboard = () => {
             px-4
             py-2
             rounded
-            hover:bg-blue-700
           "
         >
           Create Post
@@ -196,7 +229,6 @@ const Dashboard = () => {
             px-4
             py-2
             rounded
-            hover:bg-green-700
           "
         >
           My Posts

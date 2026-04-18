@@ -1,16 +1,37 @@
 import { Navigate } from "react-router";
 
-const ProtectedRoute = ({ children }) => {
+const ProtectedRoute = ({
+  children,
+  adminOnly = false
+}) => {
 
-  const token = localStorage.getItem("token");
+  const token =
+    localStorage.getItem("token");
 
-  // If token is not redirect login page
+  const role =
+    localStorage.getItem("role");
+
   if (!token) {
-    return <Navigate to="/login" />;
+
+    return (
+      <Navigate to="/login" />
+    );
+
   }
 
-  // If token is available → page allow
+  if (
+    adminOnly &&
+    role !== "admin"
+  ) {
+
+    return (
+      <Navigate to="/" />
+    );
+
+  }
+
   return children;
+
 };
 
 export default ProtectedRoute;

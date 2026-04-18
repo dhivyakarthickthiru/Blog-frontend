@@ -86,6 +86,34 @@ const PostCard = ({ post }) => {
 
   }, [post._id]);
 
+
+  //unlike increase like
+
+  useEffect(() => {
+
+  const userId =
+    localStorage.getItem(
+      "userId"
+    );
+
+  if (
+    post.likes?.includes(
+      userId
+    )
+  ) {
+
+    setLiked(true);
+
+  } else {
+
+    setLiked(false);
+
+  }
+
+}, [post.likes]);
+
+
+
   // ======================
   // NAVIGATE
   // ======================
@@ -371,19 +399,22 @@ const PostCard = ({ post }) => {
 
         {/* LIKE */}
 
-        <button
-          onClick={handleLike}
-          className={
-            liked
-              ? "text-blue-600 font-bold"
-              : "text-gray-600"
-          }
-        >
+       <button
+  onClick={handleLike}
+  className={
+    liked
+      ? "text-blue-600 font-bold"
+      : "text-gray-600"
+  }
+>
 
-          👍 {likes}
+  {liked
+    ? "👎 Unlike"
+    : "👍 Like"}
 
-        </button>
+  ({likes})
 
+</button>
         {/* COMMENTS */}
 
         <span>

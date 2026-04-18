@@ -36,8 +36,14 @@ Router configuration
 */
 
 const router = createBrowserRouter([
+
   {
-  path: "/",
+    path: "/",
+    element: <Login />,
+  }, 
+
+  {
+  path: "/home",
   element: (
     <ProtectedRoute>
       <Home />
@@ -59,10 +65,7 @@ const router = createBrowserRouter([
   element: <MyBookmarks />
 },
 
-  {
-    path: "/login",
-    element: <Login />,
-  },
+ 
 
   {
      path:"/register",
@@ -103,7 +106,7 @@ const router = createBrowserRouter([
   {
   path: "/admin",
   element: (
-    <ProtectedRoute>
+    <ProtectedRoute  adminOnly>
       <AdminDashboard />
     </ProtectedRoute>
   )

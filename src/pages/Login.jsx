@@ -10,6 +10,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
 
   const handleSubmit = async (e) => {
+
     e.preventDefault();
 
     try {
@@ -22,14 +23,32 @@ const Login = () => {
         }
       );
 
+      // SAVE TOKEN
+
       localStorage.setItem(
         "token",
         res.data.token
       );
 
+      // SAVE USER ID
+
+      localStorage.setItem(
+        "userId",
+        res.data.user._id
+      );
+
+      // SAVE ROLE (IMPORTANT)
+
+      localStorage.setItem(
+        "role",
+        res.data.user.role
+      );
+
       alert("Login successful");
 
-      navigate("/");
+      // ALWAYS GO TO HOME
+
+      navigate("/home");
 
     } catch (error) {
 
@@ -38,6 +57,7 @@ const Login = () => {
       alert("Login failed");
 
     }
+
   };
 
   return (
@@ -81,44 +101,35 @@ const Login = () => {
 
         </form>
 
-        {/* NEW */}
+        {/* Forgot password */}
 
         <div className="mt-3 text-right">
 
           <Link
             to="/forgot-password"
-            className="
-              text-blue-600
-              text-sm
-              hover:underline
-            "
+            className="text-blue-600 text-sm hover:underline"
           >
             Forgot Password?
           </Link>
 
         </div>
 
+        {/* Register */}
+
         <div className="mt-4 text-center">
 
-  <span className="text-sm">
+          <span className="text-sm">
+            New user?
+          </span>
 
-    New user?
+          <Link
+            to="/register"
+            className="text-blue-600 text-sm hover:underline ml-1"
+          >
+            Register here
+          </Link>
 
-  </span>
-
-  <Link
-    to="/register"
-    className="
-      text-blue-600
-      text-sm
-      hover:underline
-      ml-1
-    "
-  >
-    Register here
-  </Link>
-
-</div>
+        </div>
 
       </div>
 
