@@ -1,0 +1,73 @@
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import API from "../services/api";
+
+const DraftPage = () => {
+  const [drafts, setDrafts] = useState([]);
+
+  useEffect(() => {
+    fetchDrafts();
+  }, []);
+
+ 
+  const fetchDrafts = async () => {
+  try {
+
+    const res = await API.get("/posts/drafts");
+
+    console.log("DRAFT DATA:", res.data);
+
+    setDrafts(res.data);
+
+  } catch (error) {
+
+    console.log(error);
+
+    setDrafts([]);
+
+  }
+};
+
+  return (
+   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+  {!drafts || drafts.length === 0 ? (
+
+    <p>No draft posts found</p>
+
+  ) : (
+
+    drafts.map((post) => (
+
+      <div
+        key={post._id}
+        className="border p-4 rounded shadow bg-white"
+      >
+
+        <h3 className="font-bold">
+          {post.title}
+        </h3>
+
+        <p
+          dangerouslySetInnerHTML={{
+            __html: post.content?.slice(0, 100)
+          }}
+        />
+
+        <p className="text-sm text-gray-500">
+
+          Status: {post.status}
+
+        </p>
+
+      </div>
+
+    ))
+
+  )}
+
+</div>
+  );
+};
+
+export default DraftPage;

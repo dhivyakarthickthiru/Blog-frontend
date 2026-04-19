@@ -310,6 +310,11 @@ const [unreadCount,
   Manage Tags
 </Link>
 
+    <Link to="/drafts">
+    Drafts
+  </Link>
+
+
             <button onClick={handleLogout}>
               Logout
             </button>

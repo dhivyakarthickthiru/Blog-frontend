@@ -350,6 +350,43 @@ const CreatePost = () => {
 
         </select>
 
+
+        <div className="flex gap-2 mb-2">
+
+  <button
+    onClick={() =>
+      editor.chain().focus().toggleBold().run()
+    }
+  >
+    Bold
+  </button>
+
+  <button
+    onClick={() =>
+      editor.chain().focus().toggleItalic().run()
+    }
+  >
+    Italic
+  </button>
+
+  <button
+    onClick={() =>
+      editor.chain().focus().toggleHeading({ level: 1 }).run()
+    }
+  >
+    H1
+  </button>
+
+  <button
+    onClick={() =>
+      editor.chain().focus().toggleBulletList().run()
+    }
+  >
+    Bullet List
+  </button>
+
+</div>
+
         {/* EDITOR */}
 
         <div className="border p-3 rounded mb-4">

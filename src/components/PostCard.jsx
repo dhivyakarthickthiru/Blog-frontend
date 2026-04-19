@@ -425,18 +425,14 @@ const PostCard = ({ post }) => {
 
         {/* BOOKMARK */}
 
-        <span
-          onClick={handleBookmark}
-          className={`cursor-pointer ${
-            bookmarked
-              ? "text-blue-600"
-              : "text-gray-500"
-          }`}
-        >
-
-          🔖
-
-        </span>
+       <button
+  onClick={handleBookmark}
+  className="text-blue-600"
+>
+  {bookmarked
+    ? "Remove Bookmark"
+    : "Bookmark"}
+</button>
 
         {/* SHARE */}
 

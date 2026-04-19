@@ -29,6 +29,8 @@ import AuthorPage from "./pages/AuthorPage";
 
 import AdminDashboard
   from "./pages/AdminDashboard";
+import DraftPage from "./pages/DraftPage";
+
 
 
 /*
@@ -54,6 +56,17 @@ const router = createBrowserRouter([
   path: "/post/:id",
   element: <SinglePost />
 },
+
+
+{
+  path: "/drafts",
+  element: (
+    <ProtectedRoute>
+      <DraftPage />
+    </ProtectedRoute>
+  )
+},
+
 
 {
   path: "/post/:id/analytics",
