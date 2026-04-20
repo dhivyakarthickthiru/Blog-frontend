@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:3001/api",
+  baseURL:  "https://blog-backend-kb6t.onrender.com/api",
 });
 
 

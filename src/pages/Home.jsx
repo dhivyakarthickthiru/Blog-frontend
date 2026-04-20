@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import API from "../services/api";
 
 import Layout from "../components/Layout";
@@ -12,46 +12,47 @@ const Home = () => {
   // POSTS STATE
 
   const [posts, setPosts] = useState([]);
-
-  const [filteredPosts,
-    setFilteredPosts] =
-    useState([]);
+  const [filteredPosts, setFilteredPosts] = useState([]);
 
   // CATEGORY STATE
 
-  const [selectedCategory,
-    setSelectedCategory] =
+  const [selectedCategory, setSelectedCategory] =
     useState("");
+
+  // LOADING STATE
+
+  const [loading, setLoading] = useState(false);
 
   // FETCH POSTS
 
-  const fetchPosts = async () => {
+  const fetchPosts = useCallback(async () => {
 
     try {
+
+      setLoading(true);
 
       let url = "/posts";
 
       if (selectedCategory) {
-
-        url =
-          `/posts?category=${selectedCategory}`;
-
+        url = `/posts?category=${selectedCategory}`;
       }
 
-      const res =
-        await API.get(url);
+      const res = await API.get(url);
 
       setPosts(res.data);
-
       setFilteredPosts(res.data);
 
     } catch (error) {
 
-      console.log(error);
+      console.log("Fetch posts error:", error);
+
+    } finally {
+
+      setLoading(false);
 
     }
 
-  };
+  }, [selectedCategory]);
 
   // RUN WHEN CATEGORY CHANGES
 
@@ -59,7 +60,7 @@ const Home = () => {
 
     fetchPosts();
 
-  }, [selectedCategory]);
+  }, [fetchPosts]);
 
   // UI
 
@@ -80,16 +81,21 @@ const Home = () => {
           {/* TITLE */}
 
           <h2 className="text-xl font-bold mt-6 mb-4">
-
             Latest Posts
-
           </h2>
+
+          {/* LOADING */}
+
+          {loading && (
+            <p>Loading posts...</p>
+          )}
 
           {/* POSTS */}
 
           <div className="grid md:grid-cols-2 gap-4">
 
-            {filteredPosts.length === 0 ? (
+            {!loading &&
+              filteredPosts.length === 0 ? (
 
               <p>No posts found</p>
 
@@ -115,17 +121,9 @@ const Home = () => {
         <div>
 
           <SidebarPosts
-
             posts={posts}
-
-            setFilteredPosts={
-              setFilteredPosts
-            }
-
-            setSelectedCategory={
-              setSelectedCategory
-            }
-
+            setFilteredPosts={setFilteredPosts}
+            setSelectedCategory={setSelectedCategory}
           />
 
           <MostViewedPosts />
